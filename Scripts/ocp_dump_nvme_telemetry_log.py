@@ -27,6 +27,7 @@
 # 4/9/2023 - General refactor
 #          - Fixed bug detecting 'critical_warning'
 #          - Formatted with Black
+# 29/12/2025 - Updated the parsing apis, as per OCP 2.7 specification
 
 
 import sys
@@ -34,7 +35,7 @@ import argparse
 import os
 
 version = 2.2
-ocp_ver = "2.5r24"
+ocp_ver = "2.7r32"
 
 # Parse the strings log file and return a dictionary of the form:
 #
@@ -75,6 +76,7 @@ def parse_strings(strings):
         sys.exit(f"GUID value is not the correct value: 0x{guid:x}")
 
     size_dw = int.from_bytes(strings[32:39], "little")
+    data["length"] = size_dw * 4
     size = size_dw * 4
     if size != s_len:
         sys.exit(f"Log page dword size size value of {size_dw} idoes not match the size of the string log read of {s_len}")
@@ -274,7 +276,7 @@ def parse_strings(strings):
 
         while current_vu_event < end_vu_event:
             debug_class = strings[current_vu_event]
-            if (debug_class < 1) or (debug_class > 9):
+            if (debug_class < 1) or (debug_class > 13):
                 sys.exit(f"VU Event byte 0 is not a valid VU Header class: {debug_class}")
 
             if debug_class < previous_debug_class:
@@ -553,8 +555,10 @@ def parse_smart_health_info(smart):
             print("\t\t\tVolatile memory backup device failure warning.")
         if critical_warning & 0x20:
             print("\t\t\tPersistent Memory Region warning.")
-        if critical_warning & 0xC0:
-            sys.exit("Reserved bits 7:6 in byte 0 is not cleared to 0h.")
+        if critical_warning & 0x40:
+            print("\t\t\tIndeterminate Personality State warning.")
+        if critical_warning & 0x80:
+            sys.exit("Reserved bits 7 in byte 0 is not cleared to 0h.")
 
     comp_temp = int.from_bytes(smart[1:3], "little")
     print(f"\t\t\tComposite Temperature: {comp_temp} Kelvin.")
@@ -687,9 +691,15 @@ def parse_smart_health_info(smart):
     time = int.from_bytes(smart[228:232], "little")
     print(f"\t\t\tTotal Time for Thermal Management Temperature 2: {time}")
 
-    reserved = int.from_bytes(smart[232:512], "little")
+    olec = int.from_bytes(smart[232:240], "little")
+    print(f"\t\t\tOperational Lifetime Energy Consumed: {olec}")
+
+    ipm = int.from_bytes(smart[240:244], "little")
+    print(f"\t\t\tInterval Power Measurement: {ipm}")
+
+    reserved = int.from_bytes(smart[244:512], "little")
     if reserved != 0:
-        sys.exit("Reserved bytes 511:232 are not cleared to 0h.")
+        sys.exit("Reserved bytes 511:244 are not cleared to 0h.")
 
 
 # Parse and print the OCP SMART / Health Information Extension log page (Log Identifier C0h)
@@ -806,11 +816,19 @@ def parse_smart_health_info_extension(smart):
     print(f"\t\t\tCapacitor Health: {cnt}%.")
 
     errata = smart[130]
-    print(f"\t\t\tNVMe Errata Version: {chr(errata)}.")
+    print(f"\t\t\tNVM Express Base Errata Version: {chr(errata)}.")
 
-    reserved = int.from_bytes(smart[131:136], "little")
-    if reserved != 0:
-        sys.exit("Reserved bytes 135:131 are not cleared to 0h.")
+    errata = smart[131]
+    print(f"\t\t\tNVM Command Set Errata Version: {chr(errata)}.")
+
+    errata = smart[132]
+    print(f"\t\t\tNVMe over PCIe Transport Errata Version: {chr(errata)}.")
+
+    errata = smart[133]
+    print(f"\t\t\tNVM Express Management Interface Errata Version: {chr(errata)}.")
+
+    pbdr = smart[134:136]
+    print(f"\t\t\tProactive Bad Die Retirement: {pbdr}")
 
     cnt = int.from_bytes(smart[136:144], "little")
     print(f"\t\t\tUnaligned I/O: {cnt}")
@@ -833,15 +851,68 @@ def parse_smart_health_info_extension(smart):
     cnt = int.from_bytes(smart[200:208], "little")
     print(f"\t\t\tPower State Change Count: {cnt}")
 
-    ver = int.from_bytes(smart[208:224], "little")
-    print(f"\t\t\tHardware Version:{ver}")
+    cnt = int.from_bytes(smart[208:216], "little")
+    print(f"\t\t\tLowest Permitted Firmware Revision: {cnt}")
 
-    reserved = int.from_bytes(smart[224:494], "little")
-    if reserved != 0:
-        sys.exit("Reserved bytes 493:224 are not cleared to 0h.")
+    cnt = int.from_bytes(smart[216:218], "little")
+    print(f"\t\t\tTotal Media Dies: {cnt}")
+
+    cnt = int.from_bytes(smart[218:220], "little")
+    print(f"\t\t\tMedia Die Failure Tolerance: {cnt}")
+
+    cnt = int.from_bytes(smart[220:222], "little")
+    print(f"\t\t\tMedia Dies Offline: {cnt}")
+
+    cnt = smart[222]
+    print(f"\t\t\tMax Temperature Recorded: {cnt}")
+
+    cnt = smart[223]
+    print(f"\t\t\tForm Factor: {cnt}")
+
+    cnt = int.from_bytes(smart[224:232], "little")
+    print(f"\t\t\tNAND Avg. Erase Count:{cnt}")
+
+    cnt = int.from_bytes(smart[232:236], "little")
+    print(f"\t\t\tCommand Timeouts:{cnt}")
+
+    cnt = int.from_bytes(smart[236:244], "little")
+    print(f"\t\t\tSystem Area Program Fail Count:{cnt}")
+
+    cnt = int.from_bytes(smart[244:252], "little")
+    print(f"\t\t\tSystem Area Uncorrectable Read Count:{cnt}")
+
+    cnt = int.from_bytes(smart[252:260], "little")
+    print(f"\t\t\tSystem Area Erase Fail Count:{cnt}")
+
+    cnt = int.from_bytes(smart[260:262], "little")
+    print(f"\t\t\tMax Peak Power Capability:{cnt}")
+
+    cnt = int.from_bytes(smart[262:264], "little")
+    print(f"\t\t\tCurrent Average Power:{cnt}")
+
+    cnt = int.from_bytes(smart[264:270], "little")
+    print(f"\t\t\tLifetime Power Consumed:{cnt}")
+
+    cnt = int.from_bytes(smart[270:278], "little")
+    print(f"\t\t\tDSSD Firmware Revision:{cnt}")
+
+    cnt = int.from_bytes(smart[278:294], "little")
+    print(f"\t\t\tDSSD Firmware Build UUID:{cnt}")
+
+    cnt = int.from_bytes(smart[278:294], "little")
+    print(f"\t\t\tDSSD Firmware Build UUID:{cnt}")
+
+    cnt = int.from_bytes(smart[294:358], "little")
+    print(f"\t\t\tDSSD Firmware Build Label:{cnt}")
+
+    cnt = int.from_bytes(smart[358:366], "little")
+    print(f"\t\t\tDies In Use Bad NAND Blocks:{cnt}")
+
+    cnt = int.from_bytes(smart[366:494], "little")
+    print(f"\t\t\tReserved:{cnt}")
 
     ver = int.from_bytes(smart[494:496], "little")
-    if ver != 3:
+    if ver != 6:
         sys.exit(f"Log Page Version value of {ver} is invalid.")
     print(f"\t\t\tLog Page Version:{ver}")
 
@@ -922,7 +993,91 @@ stats_ocp_str = ["Error, this entry does not exist.",  # 0
                  "Max Die Bad Block",                  # 27
                  "Max NAND Channel Bad Block",         # 28
                  "Minimum NAND Channel Bad Block",     # 29
+                 "Physical Media Units Written",       # 30
+                 "Physical Media Units Read",          # 31
+                 "Bad User NAND Blocks",               # 32
+                 "Bad System NAND Blocks",             # 33
+                 "XOR Recovery Count",                 # 34
+                 "Uncorrectable Read Error Count",     # 35
+                 "Soft ECC Error Count",               # 36
+                 "End to End Correction Counts",       # 37
+                 "System Data % Used",                 # 38
+                 "Refresh Counts",                     # 39
+                 "User Data Erase Counts",             # 40
+                 "Thermal Throttling Status and Count",# 41
+                 "DSSD Specification Version",         # 42
+                 "PCIe Correctable Error Count",       # 43
+                 "Incomplete Shutdowns",               # 44
+                 "% Free Blocks",                      # 45
+                 "Capacitor Health",                   # 46
+                 "NVM Express Base Errata Version",    # 47
+                 "NVM Command Set Errata Version",     # 48
+                 "NVM Express Management Interface Errata Version", # 49
+                 "Unaligned I/O",                      # 50
+                 "Security Version Number",            # 51
+                 "Total NUSE",                         # 52
+                 "PLP Start Count",                    # 53
+                 "Endurance Estimate",                 # 54
+                 "PCIe Link Retraining Count",         # 55
+                 "Power State Change Count",           # 56
+                 "Lowest Permitted Firmware Revision", # 57
+                 "Log Page Version",                   # 58
+                 "Media Dies Offline",                 # 59
+                 "Max Temperature Recorded",           # 60
+                 "NAND Avg. Erase Count",              # 61
+                 "Command Timeouts",                   # 62
+                 "System Area Program Fail Count",     # 63
+                 "System Area Read Fail Count",        # 64
+                 "System Area Erase Fail Count",       # 65
+                 "Max Peak Power Capability",          # 66
+                 "Current Average Power",              # 67
+                 "Lifetime Power Consumed",            # 68
+                 "Error / Assert Count",               # 69
+                 "Device Busy Time",                   # 70
+                 "Critical Warning",                   # 71
+                 "Composite Temperature",              # 72
+                 "Available Spare",                    # 73
+                 "Available Spare Threshold",          # 74
+                 "Percentage Used",                    # 75
+                 "Endurance Group Critical Warning Summary", # 76
+                 "Data Units Read",                    # 77
+                 "Data Units Written",                 # 78
+                 "Host Read Commands",                 # 79
+                 "Host Write Commands",                # 80
+                 "Controller Busy Time",               # 81
+                 "Power Cycles",                       # 82
+                 "Power On Hours",                     # 83
+                 "Unsafe Shutdowns",                   # 84
+                 "Media and Data Integrity Errors",    # 85
+                 "Number Of Error Information Log Entries", #86
+                 "Warning Composite Temperature Time", # 87
+                 "Critical Composite Temperature Time",# 88
+                 "Temperature Sensor 1",                # 89
+                 "Temperature Sensor 2",                # 90
+                 "Temperature Sensor 3",                # 91
+                 "Temperature Sensor 4",                # 92
+                 "Temperature Sensor 5",                # 93
+                 "Temperature Sensor 6",                # 94
+                 "Temperature Sensor 7",                # 95
+                 "Temperature Sensor 8",                # 96
+                 "Thermal Management Temperature 1 Transition Count", # 97
+                 "Thermal Management Temperature 2 Transition Count", # 98
+                 "Total Time For Thermal Management Temperature 1",   # 99
+                 "Total Time For Thermal Management Temperature 2",   # 100
+                 "Endurance Estimate",                  # 101
+                 "Data Units Read",                     # 102
+                 "Data Units Written",                  # 103
+                 "Media Units Written",                 # 104
+                 "Number of Error Log Information Log Entries", # 105
+                 "Form Factor",                         # 106
+                 "Dies In Use Bad NAND Blocks",         # 107
+                 "Proactive Bad Die Retirement",        # 108
+                 "Namespace ID Context Statistic Descriptor",   # 109
+                 "Controller ID Context Statistic Descriptor",  # 110
+                 "Queue ID Context Statistic Descriptor",       # 111
 ]
+
+total_statistic_identifier = len(stats_ocp_str)
 
 # OCP defined behavior type definitions
 behavior_type_str = ["Error, this entry does not exist.",                                                       # 0
@@ -965,6 +1120,95 @@ dw_values = [1,     # 0
              2,     # 27
              2,     # 28
              2,     # 29
+
+             4,     # 30
+             4,     # 31
+             2,     # 32
+             2,     # 33
+             2,     # 34
+             2,     # 35
+             2,     # 36
+             2,     # 37
+             1,     # 38
+             2,     # 39
+             2,     # 40
+             1,     # 41
+             2,     # 42
+
+             2,     # 43
+             1,     # 44
+             1,     # 45
+             1,     # 46
+             1,     # 47
+             1,     # 48
+             1,     # 49
+             2,     # 50
+             2,     # 51
+             2,     # 52
+             1,     # 53
+             4,     # 54
+             2,     # 55
+
+             2,     # 56
+             4,     # 57
+             1,     # 58
+             1,     # 59
+             1,     # 60
+             2,     # 61
+             2,     # 62
+             2,     # 63
+             2,     # 64
+             2,     # 65
+             1,     # 66
+             1,     # 67
+             2,     # 68
+
+             1,     # 69
+             4,     # 70
+             1,     # 71
+             1,     # 72
+             1,     # 73
+             1,     # 74
+             1,     # 75
+             1,     # 76
+             4,     # 77
+             4,     # 78
+             4,     # 79
+             4,     # 80
+             4,     # 81
+
+             4,     # 82
+             4,     # 83
+             4,     # 84
+             4,     # 85
+             4,     # 86
+             1,     # 87
+             1,     # 88
+             1,     # 89
+             1,     # 90
+             1,     # 91
+             1,     # 92
+             1,     # 93
+             1,     # 94
+
+             1,     # 95
+             1,     # 96
+             1,     # 97
+             1,     # 98
+             1,     # 99
+             1,     # 100
+             1,     # 101
+             4,     # 102
+             4,     # 103
+             4,     # 104
+             4,     # 105
+             1,     # 106
+             2,     # 107
+             1,     # 108
+
+             2,     # 109
+             2,     # 110
+             2,     # 111
 ]
 # fmt: on
 
@@ -985,7 +1229,7 @@ def parse_a_statistic(data_area, statistics, strings, pre_string):
     identifier = int.from_bytes(statistics[offset : offset + 2], "little")
     if identifier == 0:
         sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} is invalid.")
-    if (identifier > 29) and (identifier < 0x8000):
+    if (identifier > total_statistic_identifier) and (identifier < 0x8000):
         sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} is invalid.")
 
     if identifier >= 0x8000:
@@ -993,24 +1237,29 @@ def parse_a_statistic(data_area, statistics, strings, pre_string):
         if (idx in strings["statistics"]) == False:
             sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} does not exist in the Strings log page.")
 
-    behavior_type = statistics[offset + 2]
+    behavior_type = (statistics[offset + 2]) & 0xF
     if (behavior_type == 0) or (behavior_type > 6):
         sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} behavior type value of {behavior_type} is invalid.")
+
+    host_hint_type = (statistics[offset + 2] >> 0x4) & 0x3
+
+    context_index = (statistics[offset + 2] >> 0x6) & 0x1
+
+    reserved = (statistics[offset + 2] >> 0x7) & 0x1
 
     namespace = statistics[offset + 3]
 
     dw_len = int.from_bytes(statistics[offset + 4 : offset + 6], "little")
-    if identifier < 30:
+    if identifier < total_statistic_identifier+1:
         if dw_len != dw_values[identifier]:
             sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} dword length value of {dw_len} is invalid.")
     if dw_len == 0:
         sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} dword length value of 0h is invalid.")
     if (offset + 4 + dw_len * 4) > stat_len:
+        print("stat_len = ", stat_len)
         sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} dword length value of {dw_len} is invalid.")
 
-    reserved = int.from_bytes(statistics[offset + 6 : offset + 8], "little")
-    if reserved != 0:
-        sys.exit(f"Data Area {data_area} statistic Identifier 0x{identifier:x} reserved bytes 7:6 are not 0h.")
+    namespace_0_15 = int.from_bytes(statistics[offset + 6 : offset + 8], "little")
 
     # Determine the description
     if identifier < 0x8000:
@@ -1020,12 +1269,15 @@ def parse_a_statistic(data_area, statistics, strings, pre_string):
 
     print(f"\t\t{pre_string}Identifier        : 0x{identifier:x} ({identifier})")
     print(f"\t\t\t{pre_string}Behavior Type : {behavior_type} ({behavior_type_str[behavior_type]})")
+    print(f"\t\t{pre_string}Host Hint Type        : 0x{host_hint_type:x} ({host_hint_type})")
+    print(f"\t\t{pre_string}Context Index        : 0x{context_index:x} ({context_index})")
+    print(f"\t\t{pre_string}Reserved        : 0x{reserved:x} ({reserved})")
 
     if namespace >= 128:
         print(f"\t\t\t{pre_string}Namespace     : {namespace & 127}")
     else:
         print(f"\t\t\t{pre_string}Namespace     : Not specified")
-
+    print(f"\t\t{pre_string}Namespace Identifier[0:15]        : 0x{namespace_0_15:x} ({namespace_0_15})")
     print(f"\t\t\t{pre_string}Description   : {description}")
 
     # Special case some OCP fields
@@ -1117,9 +1369,12 @@ class_type_str = [
     "Boot Sequence",
     "Firmware Assert",
     "Temperature",
-    "Media",
+    "Media Debug",
     "Media Wear",
     "Static Snapshot",
+    "Virtual FIFO Event Class",
+    "SMBUS/I2C/I3C Event Class",
+    "MCTP Event Class"
 ]
 
 # OCP defined Timestamp Event Identifiers
@@ -1289,13 +1544,17 @@ nvme_ocp = [
     "CSTS.RDY transitions from 1b to 0b",
     "Reserved",
     "Create I/O Submission Queue Command or Create I/O Completion Queue Command Processed",
-    "Other Admin Queue Command Processed",
+    "In-band Admin Command Processed other than Create I/O Submission Queue Command or Create I/O Completion Queue Command Processed successfully",
     "An Admin Command Returned a Non-zero Status Code",
     "An I/O Command Returned a Non-zero Status Code",
     "CSTS.CFS Set to 1b",
     "Admin Submission Queue Base Address Written (AQA) or Admi Completion Queue Based Address (ACQ) written",
     "Controller Configuration Register (CC) Changed except for the cases that are covered in 0000h and 0001h.",
     "Controller Status Register (CSTS) Changed except for the cases that are covered in 0002h and 0003h",
+    "Delete I/O Completion Queue Command or Delete I/O Submission Queue Command Processed",
+    "Out of-band Command Processed",
+    "Out-of-band Asynchronous Event Message Transmitted",
+    "Error Reporting AEN was sent",
 ]
 
 # Parse and print an NVMe debug event
@@ -1310,7 +1569,7 @@ nvme_ocp = [
 #
 # Output: None
 def parse_nvme(data_area, fifo_num, identifier, dw_size, event, strings):
-    if (identifier > 12) and (identifier < 0x8000):
+    if (identifier > 16) and (identifier < 0x8000):
         sys.exit(f"Data Area {data_area} FIFO {fifo_num} NVMe event Identifier value of 0x{identifier:x} is invalid.")
 
     if dw_size < 2:
@@ -1334,6 +1593,14 @@ def parse_nvme(data_area, fifo_num, identifier, dw_size, event, strings):
         reserved = int.from_bytes(event[8:12], "little")
         if reserved != 0:
             sys.exit(f"Data Area {data_area} FIFO {fifo_num} NVMe event reserved value in bytes 11:8 are not 0h.")
+    elif identifier == 0xE:
+        c_opcode = event[4]
+        status_field = int.from_bytes(event[5:7], "little")
+        mi_status = event[7]
+        by1_type = event[8]
+        by2_type = event[9]
+    elif identifier == 0xF:
+        aer = int.from_bytes(event[4:12], "little")
     else:
         reserved = int.from_bytes(event[4:12], "little")
         if reserved != 0:
@@ -1369,6 +1636,14 @@ def parse_nvme(data_area, fifo_num, identifier, dw_size, event, strings):
         print(f"\t\t\t\tController Configuration Register: 0x{cc:x}")
     elif identifier == 0xC:
         print(f"\t\t\t\tController Status Register : 0x{csr:x}")
+    elif identifier == 0xE:
+        print(f"\t\t\t\tCommand Opcode {spacing}: 0x{c_opcode:x}")
+        print(f"\t\t\t\tStatus Code    {spacing}: 0x{status_field:x}")
+        print(f"\t\t\t\tNVMe MI Status Code {spacing}: 0x{mi_status:x}")
+        print(f"\t\t\t\tByte 1 from the Request Message    {spacing}: 0x{by1_type:x}")
+        print(f"\t\t\t\tByte 2 from the Request Message    {spacing}: 0x{by2_type:x}")
+    elif identifier == 0xF:
+        print(f"\t\t\t\tAER Event Identifier: 0x{aer:x}")
 
     if dw_size > 2:
         print(f"\t\t\t\tVU Identifier  {spacing}: 0x{vu_id:x}")
@@ -1650,10 +1925,119 @@ def parse_media_wear(data_area, fifo_num, identifier, dw_size, event, strings):
         print(f"\t\t\t\tMedia Terabytes Written: {media_tr_w}")
         print(f"\t\t\t\tMedia Terabytes Erased : {media_tr_e}")
 
-    if dw_size > 1:
+    if dw_size > 3:
         print(f"\t\t\t\tVU Identifier          : 0x{vu_id:x}")
         print(f"\t\t\t\tVU data                : 0x{vu_value:x}")
         print(f"\t\t\t\tVU definion            : {description}")
+
+# OCP defined PCIe event identifiers
+smbus_ocp_id = [
+    "Timeout Errors",
+    "PEC Errors",
+    "Arbitration Loss",
+    "NACK Error"
+]
+
+# Parse and print a SMBUS/I2C/I3C event
+#
+# Input:
+#      data area  : integer specify which data area the static was defined
+#      fifo_num:  : integer of the FIFO containing the event
+#      identifier : integer of event identifier
+#      dw_size    : integer containing the event Dword size
+#      event      : bytearray of the remaining events to parse where the first event is a PCIe event
+#      strings    : dictionary of the parsed string log page contining the VU ASCII strings
+#
+# Output: None
+def parse_smbus_i2c_i3c(data_area, fifo_num, identifier, dw_size, event, strings):
+    if (identifier > 0x3) and (identifier < 0x8000):
+        sys.exit(f"Data Area {data_area} FIFO {fifo_num} SMBUS/I2C/I3C event Identifier value of 0x{identifier:x} is invalid.")
+
+    if dw_size < 1:
+        sys.exit(f"Data Area {data_area} FIFO {fifo_num} SMBUS/I2C/I3C event dword size value of {dw_size} is invalid.")
+
+    if identifier == 0x3:
+        event_data = int.from_bytes(event[4:6], "little")
+
+    if dw_size > 1:
+        vu_id = int.from_bytes(event[8:10], "little")
+        idx = hex(12) + hex(vu_id)
+        if (idx in strings["vu_events"]) == False:
+            sys.exit(f"Data Area {data_area} FIFO {fifo_num} SMBUS/I2C/I3C event VU Identifier 0x{vu_id:x} does not exist in the string log file")
+        else:
+            description = strings["vu_events"][idx]["string"]
+        vu_value = int.from_bytes(event[10 : 10 + ((dw_size - 1) * 4)], "little")
+
+    print("\t\t\tSMBUS/I2C/I3C Event:")
+    if identifier < 0x8000:
+        print(f"\t\t\t\tIdentifier        : 0x{identifier:x} ({smbus_ocp_id[identifier]})")
+    else:
+        print(f"\t\t\t\tIdentifier        : 0x{identifier:x} (Vendor Unique)")
+
+    if identifier == 3:
+        print(f"\t\t\t\tSMBUS Debug Event Data : {event_data}")
+
+    if dw_size > 1:
+        print(f"\t\t\t\tVU Identifier     : 0x{vu_id:x}")
+        print(f"\t\t\t\tVU data           : 0x{vu_value:x}")
+        print(f"\t\t\t\tVU definition     : {description}")
+
+# OCP defined PCIe event identifiers
+mctp_ocp_id = [
+    "Dropped Packet",
+    "Dropped Message",
+    "Discovery and Addressing errors",
+    "Error Status"
+]
+
+# Parse and print a MCTP event
+#
+# Input:
+#      data area  : integer specify which data area the static was defined
+#      fifo_num:  : integer of the FIFO containing the event
+#      identifier : integer of event identifier
+#      dw_size    : integer containing the event Dword size
+#      event      : bytearray of the remaining events to parse where the first event is a PCIe event
+#      strings    : dictionary of the parsed string log page contining the VU ASCII strings
+#
+# Output: None
+def parse_mctp(data_area, fifo_num, identifier, dw_size, event, strings):
+    if (identifier > 0x3) and (identifier < 0x8000):
+        sys.exit(f"Data Area {data_area} FIFO {fifo_num} MCTP event Identifier value of 0x{identifier:x} is invalid.")
+
+    if dw_size < 2:
+        sys.exit(f"Data Area {data_area} FIFO {fifo_num} MCTP event dword size value of {dw_size} is invalid.")
+
+    event_data = int.from_bytes(event[4:6], "little")
+    tpi = event[6]
+    ef = event[7]
+    th = int.from_bytes(event[8:12], "little")
+
+    if dw_size > 2:
+        vu_id = int.from_bytes(event[12:14], "little")
+        idx = hex(13) + hex(vu_id)
+        if (idx in strings["vu_events"]) == False:
+            sys.exit(f"Data Area {data_area} FIFO {fifo_num} MCTP event VU Identifier 0x{vu_id:x} does not exist in the string log file")
+        else:
+            description = strings["vu_events"][idx]["string"]
+        vu_value = int.from_bytes(event[10 : 10 + ((dw_size - 1) * 4)], "little")
+
+    print("\t\t\tMCTP Event:")
+    if identifier < 0x8000:
+        print(f"\t\t\t\tIdentifier        : 0x{identifier:x} ({mctp_ocp_id[identifier]})")
+    else:
+        print(f"\t\t\t\tIdentifier        : 0x{identifier:x} (Vendor Unique)")
+
+    print(f"\t\t\t\tMCTP Debug Event Data : {event_data}")
+    print(f"\t\t\t\tMCTP Transport Protocol Information : {tpi}")
+    print(f"\t\t\t\tMCTP Event Flag : {ef}")
+    print(f"\t\t\t\tMCTP Transport Header : {th}")
+
+    if dw_size > 2:
+        print(f"\t\t\t\tVU Identifier     : 0x{vu_id:x}")
+        print(f"\t\t\t\tVU data           : 0x{vu_value:x}")
+        print(f"\t\t\t\tVU definition     : {description}")
+
 
 
 # Parse and print Snapshot debug event
@@ -1675,6 +2059,39 @@ def parse_snapshot(data_area, fifo_num, event, strings):
     # Ignore the offset
     offset = parse_a_statistic(data_area, event[4:], strings, "\t")
 
+# Parse and print a Virtual FIFO event
+#
+# Input:
+#      data area  : integer specify which data area the static was defined
+#      fifo_num:  : integer of the FIFO containing the event
+#      identifier : integer of event identifier
+#      dw_size    : integer containing the event Dword size
+#      event      : bytearray of the remaining events to parse where the first event is a Media event
+#      strings    : dictionary of the parsed string log page contining the VU ASCII strings
+#
+# Output: None
+def parse_virtual_fifo(data_area, fifo_num, identifier, dw_size, event, strings):
+    if (identifier > 0x1) and (identifier < 0x8000):
+        sys.exit(f"Data Area {data_area} FIFO {fifo_num} Virtual FIFO Identifier value of 0x{identifier:x} is invalid.")
+
+    print("\t\t\tVirtual FIFO Event:")
+    if identifier < 0x8000:
+        print(f"\t\t\t\tIdentifier    : 0x{identifier:x} ({media_ocp[identifier]})")
+    else:
+        print(f"\t\t\t\tIdentifier    : 0x{identifier:x} (Vendor Unique)")
+    v_fifo_idfy = int.from_bytes(event[1:3], "little")
+    v_fifo_data_sz = event[3]
+    vu_v_fifo_idfy = int.from_bytes(event[4:6], "little")
+    res = int.from_bytes(event[6:8], "little")
+
+    print(f"\t\t\t\tVirtual FIFO Identifier : {v_fifo_idfy}")
+    print(f"\t\t\t\tVirtual FIFO Data Size: {v_fifo_data_sz}")
+    print(f"\t\t\t\tVU Virtual FIFO Identifier : {vu_v_fifo_idfy}")
+    print(f"\t\t\t\tReserved : {res}")
+
+
+
+
 
 # Array of parsing functions for OCP defined Events except the Snapshot event
 parse_ocp_event = [
@@ -1685,7 +2102,11 @@ parse_ocp_event = [
     parse_boot,
     parse_fw_assert,
     parse_temp,
+    parse_media,
     parse_media_wear,
+    parse_virtual_fifo,
+    parse_smbus_i2c_i3c,
+    parse_mctp,
 ]
 
 # Parse and print a FIFO
@@ -1710,22 +2131,27 @@ def parse_a_fifo(data_area, fifo_num, data, strings):
             break
 
         print(f"\t\tEvent Entry {event_num}")
-        if (class_type > 10) and (class_type < 0x80):
+        if (class_type > 13) and (class_type < 0x80):
             sys.exit(f"Data Area {data_area} FIFO {fifo_num} class type value of {class_type} is invalid.")
 
         if class_type != 0x10:
             identifier = int.from_bytes(data[offset + 1 : offset + 3], "little")
             dw_size = data[offset + 3]
             static_size = 4
-
         # Parse the event type
-        if class_type < 0x9:
+        if class_type <= 0x9:
             parse_ocp_event[class_type - 1](data_area, fifo_num, identifier, dw_size, data[offset : offset + 4 + (dw_size * 4)], strings)
         elif class_type == 0x0A:
             # Need the size to extract the bytearray
             dw_size = int.from_bytes(data[offset + 8 : offset + 9])
             static_size = 12
             parse_snapshot(data_area, fifo_num, data[offset : offset + 12 + (dw_size * 4)], strings)
+        elif class_type == 0x0B:
+            parse_virtual_fifo(data_area, fifo_num, identifier, dw_size, data[offset: offset + 4 + (dw_size * 4)],strings)
+        elif class_type == 0x0C:
+            parse_smbus_i2c_i3c(data_area, fifo_num, identifier, dw_size, data[offset: offset + 4 + (dw_size * 4)],strings)
+        elif class_type == 0x0D:
+            parse_mctp(data_area, fifo_num, identifier, dw_size, data[offset: offset + 4 + (dw_size * 4)],strings)
         else:
             # Parse Vendor unique
             identifier = int.from_bytes(data[offset + 1 : offset + 3], "little")
@@ -1733,7 +2159,6 @@ def parse_a_fifo(data_area, fifo_num, data, strings):
 
             # make sure the VU string exists
             idx = hex(class_type) + hex(identifier)
-
             if (idx in strings["events"]) == False:
                 sys.exit(f"Data Area {data_area} FIFO {fifo_num} class type value of {class_type} has no String log page definition.")
 

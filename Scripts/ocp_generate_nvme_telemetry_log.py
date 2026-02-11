@@ -29,6 +29,7 @@
 #          - Reduce dictionary lookups
 #          - Deduplicate code
 #          - Reformat code with Black
+# 29/12/2025 - Updated the sample_json, apis, as per OCP 2.7 specification
 
 import json
 import sys
@@ -44,7 +45,7 @@ version = 2.2
 
 time = random.randint(0, (2 ** 48) - 1)
 
-ocp_ver = "2.5r24"
+ocp_ver = "2.7r32"
 
 sample_json = (
     "{\n"
@@ -372,8 +373,829 @@ sample_json = (
     '         "Namespace" : 0,\n'
     '         "Requirement" : "STATI-30",\n'
     '         "Definition" : "This information is based on the dies in a single NAND channel which has the smallest number of bad blocks.",\n'
+    '         "Data Area" : 1},\n'
+    '     "Physical Media Units Written" : {\n'
+    '         "Identifier" : 30,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-33",\n'
+    '         "Definition" : "Physical Media Units Written is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Physical Media Units Read" : {\n'
+    '         "Identifier" : 31,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-34",\n'
+    '         "Definition" : "Physical Media Units Read is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Bad User NAND Blocks" : {\n'
+    '         "Identifier" : 32,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-35",\n'
+    '         "Definition" : "Bad User NAND Blocks is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Bad System NAND Blocks" : {\n'
+    '         "Identifier" : 33,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-36",\n'
+    '         "Definition" : "Bad System NAND Blocks is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "XOR Recovery Count" : {\n'
+    '         "Identifier" : 34,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-37",\n'
+    '         "Definition" : "XOR Recovery Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Uncorrectable Read Error Count" : {\n'
+    '         "Identifier" : 35,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-38",\n'
+    '         "Definition" : "Uncorrectable Read Error Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Soft ECC Error Count" : {\n'
+    '         "Identifier" : 36,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-39",\n'
+    '         "Definition" : "Soft ECC Error Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "End to End Correction Counts" : {\n'
+    '         "Identifier" : 37,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-40",\n'
+    '         "Definition" : "End to End Correction Counts is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "System Data % Used" : {\n'
+    '         "Identifier" : 38,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-41",\n'
+    '         "Definition" : "System Data % Used is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Refresh Counts" : {\n'
+    '         "Identifier" : 39,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-42",\n'
+    '         "Definition" : "Refresh Counts is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "User Data Erase Counts" : {\n'
+    '         "Identifier" : 40,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-43",\n'
+    '         "Definition" : "User Data Erase Counts is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Thermal Throttling Status and Count" : {\n'
+    '         "Identifier" : 41,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-44",\n'
+    '         "Definition" : "Thermal Throttling Status and Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "DSSD Specification Version" : {\n'
+    '         "Identifier" : 42,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-45",\n'
+    '         "Definition" : "DSSD Specification Version is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "PCIe Correctable Error Count" : {\n'
+    '         "Identifier" : 43,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-46",\n'
+    '         "Definition" : "PCIe Correctable Error Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Incomplete Shutdowns" : {\n'
+    '         "Identifier" : 44,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-47",\n'
+    '         "Definition" : "Incomplete Shutdowns is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "% Free Blocks" : {\n'
+    '         "Identifier" : 45,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-48",\n'
+    '         "Definition" : "% Free Blocks is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Capacitor Health" : {\n'
+    '         "Identifier" : 46,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-49",\n'
+    '         "Definition" : "Capacitor Health is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "NVM Express Base Errata Version" : {\n'
+    '         "Identifier" : 47,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-50",\n'
+    '         "Definition" : "NVM Express Base Errata Version is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "NVM Command Set Errata Version" : {\n'
+    '         "Identifier" : 48,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-51",\n'
+    '         "Definition" : "NVM Command Set Errata Version is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "NVM Express Management Interface Errata Version" : {\n'
+    '         "Identifier" : 49,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-52",\n'
+    '         "Definition" : "NVM Express Management Interface Errata Version is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Unaligned I/O" : {\n'
+    '         "Identifier" : 50,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-53",\n'
+    '         "Definition" : "Unaligned I/O is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Security Version Number" : {\n'
+    '         "Identifier" : 51,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-54",\n'
+    '         "Definition" : "Security Version Number is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Total NUSE" : {\n'
+    '         "Identifier" : 52,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-55",\n'
+    '         "Definition" : "Total NUSE is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "PLP Start Count" : {\n'
+    '         "Identifier" : 53,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-56",\n'
+    '         "Definition" : "PLP Start Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Endurance Estimate" : {\n'
+    '         "Identifier" : 54,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-57",\n'
+    '         "Definition" : "Endurance Estimate is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "PCIe Link Retraining Count" : {\n'
+    '         "Identifier" : 55,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-58",\n'
+    '         "Definition" : "PCIe Link Retraining Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Power State Change Count" : {\n'
+    '         "Identifier" : 56,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-59",\n'
+    '         "Definition" : "Power State Change Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Lowest Permitted Firmware Revision" : {\n'
+    '         "Identifier" : 57,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-60",\n'
+    '         "Definition" : "Lowest Permitted Firmware Revision is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Log Page Version" : {\n'
+    '         "Identifier" : 58,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-61",\n'
+    '         "Definition" : "Log Page Version is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Media Dies Offline" : {\n'
+    '         "Identifier" : 59,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-62",\n'
+    '         "Definition" : "Media Dies Offline is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Max Temperature Recorded" : {\n'
+    '         "Identifier" : 60,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-63",\n'
+    '         "Definition" : "Max Temperature Recorded is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "NAND Avg. Erase Count" : {\n'
+    '         "Identifier" : 61,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-64",\n'
+    '         "Definition" : "NAND Avg. Erase Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Command Timeouts" : {\n'
+    '         "Identifier" : 62,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-65",\n'
+    '         "Definition" : "Command Timeouts is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "System Area Program Fail Count" : {\n'
+    '         "Identifier" : 63,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-66",\n'
+    '         "Definition" : "System Area Program Fail Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "System Area Read Fail Count" : {\n'
+    '         "Identifier" : 64,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-67",\n'
+    '         "Definition" : "System Area Read Fail Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "System Area Erase Fail Count" : {\n'
+    '         "Identifier" : 65,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-68",\n'
+    '         "Definition" : "System Area Erase Fail Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Max Peak Power Capability" : {\n'
+    '         "Identifier" : 66,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-69",\n'
+    '         "Definition" : "Max Peak Power Capability is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Current Average Power" : {\n'
+    '         "Identifier" : 67,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-70",\n'
+    '         "Definition" : "Current Average Power is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Lifetime Power Consumed" : {\n'
+    '         "Identifier" : 68,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-71",\n'
+    '         "Definition" : "Lifetime Power Consumed is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Error / Assert Count" : {\n'
+    '         "Identifier" : 69,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-72",\n'
+    '         "Definition" : "Error / Assert Count is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Device Busy Time" : {\n'
+    '         "Identifier" : 70,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-73",\n'
+    '         "Definition" : "Device Busy Time is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Critical Warning" : {\n'
+    '         "Identifier" : 71,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-74",\n'
+    '         "Definition" : "Critical Warning is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Composite Temperature" : {\n'
+    '         "Identifier" : 72,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-75",\n'
+    '         "Definition" : "Composite Temperature is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Available Spare" : {\n'
+    '         "Identifier" : 73,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-76",\n'
+    '         "Definition" : "Available Spare is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Available Spare Threshold" : {\n'
+    '         "Identifier" : 74,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-77",\n'
+    '         "Definition" : "Available Spare Threshold is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Percentage Used" : {\n'
+    '         "Identifier" : 75,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-78",\n'
+    '         "Definition" : "Percentage Used is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Endurance Group Critical Warning Summary" : {\n'
+    '         "Identifier" : 76,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-79",\n'
+    '         "Definition" : "Endurance Group Critical Warning Summary is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Data Units Read" : {\n'
+    '         "Identifier" : 77,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-80",\n'
+    '         "Definition" : "Data Units Read is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Data Units Written" : {\n'
+    '         "Identifier" : 78,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-81",\n'
+    '         "Definition" : "Data Units Written is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Host Read Commands" : {\n'
+    '         "Identifier" : 79,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-82",\n'
+    '         "Definition" : "Host Read Commands is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Host Write Commands" : {\n'
+    '         "Identifier" : 80,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-83",\n'
+    '         "Definition" : "Host Write Commands is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Controller Busy Time" : {\n'
+    '         "Identifier" : 81,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-84",\n'
+    '         "Definition" : "Controller Busy Time is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Power Cycles" : {\n'
+    '         "Identifier" : 82,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-85",\n'
+    '         "Definition" : "Power Cycles is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Power On Hours" : {\n'
+    '         "Identifier" : 83,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-86",\n'
+    '         "Definition" : "Power On Hours is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Unsafe Shutdowns" : {\n'
+    '         "Identifier" : 84,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-87",\n'
+    '         "Definition" : "Unsafe Shutdowns is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Media and Data Integrity Errors" : {\n'
+    '         "Identifier" : 85,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-88",\n'
+    '         "Definition" : "Media and Data Integrity Errors is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Number Of Error Information Log Entries" : {\n'
+    '         "Identifier" : 86,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-89",\n'
+    '         "Definition" : "Number Of Error Information Log Entries is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Warning Composite Temperature Time" : {\n'
+    '         "Identifier" : 87,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-90",\n'
+    '         "Definition" : "Warning Composite Temperature Time is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Critical Composite Temperature Time" : {\n'
+    '         "Identifier" : 88,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-91",\n'
+    '         "Definition" : "Critical Composite Temperature Time is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 1" : {\n'
+    '         "Identifier" : 89,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-92",\n'
+    '         "Definition" : "Temperature Sensor 1 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 2" : {\n'
+    '         "Identifier" : 90,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-93",\n'
+    '         "Definition" : "Temperature Sensor 2 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 3" : {\n'
+    '         "Identifier" : 91,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-94",\n'
+    '         "Definition" : "Temperature Sensor 3 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 4" : {\n'
+    '         "Identifier" : 92,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-95",\n'
+    '         "Definition" : "Temperature Sensor 4 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 5" : {\n'
+    '         "Identifier" : 93,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-96",\n'
+    '         "Definition" : "Temperature Sensor 5 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 6" : {\n'
+    '         "Identifier" : 94,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-97",\n'
+    '         "Definition" : "Temperature Sensor 6 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 7" : {\n'
+    '         "Identifier" : 95,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-98",\n'
+    '         "Definition" : "Temperature Sensor 7 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Temperature Sensor 8" : {\n'
+    '         "Identifier" : 96,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-99",\n'
+    '         "Definition" : "Temperature Sensor 8 is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Thermal Management Temperature 1 Transition Count" : {\n'
+    '         "Identifier" : 97,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-100",\n'
+    '         "Definition" : "Thermal Management Temperature 1 Transition Count is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Thermal Management Temperature 2 Transition Count" : {\n'
+    '         "Identifier" : 98,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-101",\n'
+    '         "Definition" : "Thermal Management Temperature 2 Transition Count is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Total Time For Thermal Management Temperature 1" : {\n'
+    '         "Identifier" : 99,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-102",\n'
+    '         "Definition" : "Total Time For Thermal Management Temperature 1 Transition Count is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Total Time For Thermal Management Temperature 2" : {\n'
+    '         "Identifier" : 100,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-103",\n'
+    '         "Definition" : "Total Time For Thermal Management Temperature 2 Transition Count is the value of this field in the SMART / Health log page (Log Identifier 02h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Endurance Estimate" : {\n'
+    '         "Identifier" : 101,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-104",\n'
+    '         "Definition" : "Endurance Estimate is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Data Units Read" : {\n'
+    '         "Identifier" : 102,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-105",\n'
+    '         "Definition" : "Data Units Read is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Data Units Written" : {\n'
+    '         "Identifier" : 103,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-106",\n'
+    '         "Definition" : "Data Units Written is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Media Units Written" : {\n'
+    '         "Identifier" : 104,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-107",\n'
+    '         "Definition" : "Media Units Written is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Number of Error Information Log Entries" : {\n'
+    '         "Identifier" : 105,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 4,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-108",\n'
+    '         "Definition" : "Number of Error Information Log Entries is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Form Factor" : {\n'
+    '         "Identifier" : 106,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-109",\n'
+    '         "Definition" : "Form Factor is the value of this field in the Endurance Group log page (Log Identifier 09h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Dies In Use Bad NAND Blocks" : {\n'
+    '         "Identifier" : 107,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-110",\n'
+    '         "Definition" : "Dies In Use Bad NAND Blocks is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Proactive Bad Die Retirement" : {\n'
+    '         "Identifier" : 108,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 1,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-111",\n'
+    '         "Definition" : "Proactive Bad Die Retirement is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Namespace ID Context Statistic Descriptor" : {\n'
+    '         "Identifier" : 109,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-112",\n'
+    '         "Definition" : "Namespace ID Context Statistic Descriptor is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Controller ID Context Statistic Descriptor" : {\n'
+    '         "Identifier" : 110,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-113",\n'
+    '         "Definition" : "Controller ID Context Statistic Descriptor is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
+    '         "Data Area" : 1},\n'
+    '     "Queue ID Context Statistic Descriptor" : {\n'
+    '         "Identifier" : 111,\n'
+    '         "Value Max" : 786444,\n'
+    '         "Value Min" : 786444,\n'
+    '         "Dword Size" : 2,\n'
+    '         "Behavior Type" : 4,\n'
+    '         "Namespace" : 0,\n'
+    '         "Requirement" : "STATI-114",\n'
+    '         "Definition" : "Queue ID Context Statistic Descriptor is the value of this field in the SMART / Health Extended log page (Log Identifier C0h).",\n'
     '         "Data Area" : 1}\n'
     "     },\n"
+
     '     "Vendor Defined" : {\n'
     '         "_comment"  : "Define the set of OCP Vendor Statistics to be reported. A random value is selected between the minimum and maximum values.",\n'
     '         "Specific Fields" : {\n'
@@ -612,6 +1434,103 @@ def generate_data_area(data_area, size):
         return randbytes(size)
     return bytearray()
 
+log_c0h_offset = {
+        0x1E:[0,15],
+        0x1F:[16,31],
+        0x20:[32,39],
+        0x21:[40,47],
+        0x22:[48,55],
+        0x23:[56,63],
+        0x24:[64,71],
+        0x25:[72,79],
+        0x26:[80],
+        0x27:[81,87],
+        0x28:[88,95],
+        0x29:[96,97],
+        0x2A:[98,103],
+        0x2B:[104,111],
+        0x2C:[112,115],
+        0x2D:[120],
+        0x2E:[128,129],
+        0x2F:[130],
+        0x30:[131],
+        0x31:[133],
+        0x32:[136,143],
+        0x33:[144,151],
+        0x34:[152,159],
+        0x35:[160,175],
+        0x36:[176,191],
+        0x37:[192,199],
+        0x38:[200,207],
+        0x39:[208,215],
+        0x3A:[494,495],
+        0x3B:[220,221],
+        0x3C:[222],
+        0x3D:[224,231],
+        0x3E:[232,235],
+        0x3F:[236,243],
+        0x40:[247,251],
+        0x41:[255,259],
+        0x42:[260,261],
+        0x43:[262,263],
+        0x44:[264,269],
+        0x6A:[223],
+        0x6B:[358,365],
+        0x6C:[134,135]
+}
+def get_c0h_log_val(log_page_c0, identifier):
+    offset_lst = log_c0h_offset[identifier]
+
+    if len(offset_lst) == 1:
+        field_val = log_page_c0[offset_lst[0]]
+    else:
+        field_val = 0
+        for i in range(0, len(offset_lst)):
+            field_val = field_val | (log_page_c0[offset_lst[i]] << i)
+    return field_val
+
+log_2h_offset = {
+    0x47 : [0x0],
+    0x48 : [0x1,0x2],
+    0x49 : [0x3],
+    0x4A : [0x4],
+    0x4B : [0x5],
+    0x4C : [0x6],
+    0x4D : [32,47],
+    0x4E : [48,63],
+    0x4F : [64,79],
+    0x50 : [80,95],
+    0x51 : [96,111],
+    0x52 : [112,127],
+    0x53 : [128,143],
+    0x54 : [144,159],
+    0x55 : [160,175],
+    0x56 : [176,191],
+    0x57 : [192,195],
+    0x58 : [196, 199],
+    0x59 : [200, 201],
+    0x5A : [202, 203],
+    0x5B : [204, 205],
+    0x5C: [206, 207],
+    0x5D: [208, 209],
+    0x5E: [210, 211],
+    0x5F: [212, 213],
+    0x60: [214, 215],
+    0x61 : [216, 219],
+    0x62 : [220, 223],
+    0x63 : [224, 227],
+    0x64 : [228, 231],
+}
+def get_2h_log_val(log_page_2h, identifier):
+    offset_lst = log_2h_offset[identifier]
+
+    if len(offset_lst) == 1:
+        field_val = log_page_2h[offset_lst[0]]
+    else:
+        field_val = 0
+        for i in range(0, len(offset_lst)):
+            field_val = field_val | (log_page_2h[offset_lst[i]] << i)
+    return field_val
 
 # Generate a statistics descriptor
 #
@@ -621,7 +1540,7 @@ def generate_data_area(data_area, size):
 #         namespaces : Number of namespaces allowed
 #
 # Output: Bytearray contabing a statics descriptor with random data generated for the data
-def generate_statistic(statistic, name, namespaces):
+def generate_statistic(statistic, name, namespaces, log_page_c0, log_page_2h):
 
     # Validate the statistic identifier
     identifier = statistic["Identifier"]
@@ -632,6 +1551,18 @@ def generate_statistic(statistic, name, namespaces):
     behavior_type = statistic["Behavior Type"]
     if (behavior_type < 1) or (behavior_type >= 7):
         sys.exit(f"Statistic {name}has an invalid Behavior Type value{behavior_type}")
+
+    # Validate the Context Index
+    context_index = 0
+    if identifier in [0x6D, 0x6E, 0x6F]:
+        context_index = 1
+
+    # Validate the Host Hint type
+    host_hint_type = 0
+    if identifier >= 0x1E and identifier <= 0x6F:
+        host_hint_type = 1
+
+    stat_info = (context_index << 6) | (host_hint_type << 4) | (behavior_type & 0xF)
 
     # Validate the namespace - a Namespace of 0h means no namespace is specified
     namespace = statistic["Namespace"]
@@ -649,6 +1580,11 @@ def generate_statistic(statistic, name, namespaces):
     if (dw_size < 1) or (dw_size >= 9):
         sys.exit(f"Statistic {name}has an invalid Dword size value{dw_size}")
 
+    nsid_0_15 = 0
+    if (namespace >> 7) != 0:
+        nsid_0_15 = statistic["Namespace"] & 0x7F
+
+
     # Validate the min/max values
     maximum = statistic["Value Max"]
     minimum = statistic["Value Min"]
@@ -657,10 +1593,10 @@ def generate_statistic(statistic, name, namespaces):
 
     descriptor = bytearray()
     descriptor += identifier.to_bytes(2, "little")     # 1:0 Static Identifier
-    descriptor += behavior_type.to_bytes(1, "little")  #   2 Statistic Info
+    descriptor += stat_info.to_bytes(1, "little")  #   2 Statistic Info
     descriptor += namespace.to_bytes(1, "little")      #   3 NS Info
     descriptor += dw_size.to_bytes(2, "little")        # 5:4 Statistic Data Size
-    descriptor += bytearray(2)                         # 7:6 Reserved
+    descriptor += nsid_0_15.to_bytes(2, "little")        # 7:6 Namespace Identifier [0:15]
 
     # Generate the value  - special case a few OCP defined values
     if identifier in (0x1B, 0x1C, 0x1D):
@@ -671,6 +1607,12 @@ def generate_statistic(statistic, name, namespaces):
         descriptor += (0).to_bytes(1, "little")
         descriptor += random.randint(0, (2 ** 16) - 1).to_bytes(2, "little")
         descriptor += (0).to_bytes(4, "little")
+    elif identifier in log_c0h_offset.keys():
+        value = get_c0h_log_val(log_page_c0, identifier)
+        descriptor += value.to_bytes((dw_size * 4), "little")
+    elif identifier in log_2h_offset.keys():
+        value = get_2h_log_val(log_page_2h, identifier)
+        descriptor += value.to_bytes((dw_size * 4), "little")
     else:
         descriptor += random.randint(minimum, maximum).to_bytes((dw_size * 4), "little")
 
@@ -701,7 +1643,7 @@ def generate_statistic(statistic, name, namespaces):
 #                     'Data Area 1 Identifiers' : array of identifier for random snapshot selections
 #                     'Data Area 2 Identifiers' : array of identifier for random snapshot selections
 #
-def get_statistics(ocp_data):
+def get_statistics(ocp_data, log_page_c0, log_page_2h):
 
     statistics = {
         "Namespaces": (0),
@@ -726,15 +1668,15 @@ def get_statistics(ocp_data):
         else:
             sys.exit(f"Statistics {stat} has an invalid Data Area value of {stat_value['Data Area']}")
 
-        stat_data = generate_statistic(stat_value, stat, namespaces)
+        stat_data = generate_statistic(stat_value, stat, namespaces, log_page_c0, log_page_2h)
 
         # Validate the Identifier is not already used.
         identifier = stat_data["Identifier"]
         if hex(identifier) in statistics[_area]:
-            sys.exit(f"Statistic '{stat}' and '{key}' have the same identifier value of {stat_data['Identifier']}")
+            sys.exit(f"Statistic '{stat}' have the same identifier value of {stat_data['Identifier']}")
 
         # Validate the Identifier value - Just checking range
-        if (identifier < 1) or (identifier > 29):
+        if (identifier < 1) or (identifier > 111):
             sys.exit(f"Statistic '{stat}' has an invalid identifier value of {stat_data['Identifier']}")
 
         statistics[_area][hex(identifier)] = stat_data
@@ -753,6 +1695,7 @@ def get_statistics(ocp_data):
         # Pick the fields for the random statistic
         identifier = choice(list(set(range(0x8000, 0xFFFF)) - set(used_values)))
         behavior_type = random.randint(1, 6)
+        host_hint_type = random.randint(0, 1)
         namespace = random.randint(0, namespaces)
         dword_size = random.randint(1, 8)
         max_value = random.randint(0, (2 ** (dword_size * 4)) - 1)
@@ -767,6 +1710,7 @@ def get_statistics(ocp_data):
             "Value Min": min_value,
             "Dword Size": dword_size,
             "Behavior Type": behavior_type,
+            "Host Hint Type": host_hint_type,
             "Namespace": namespace,
             "Requirement": "STATI-31",
             "Definition": definition,
@@ -781,7 +1725,7 @@ def get_statistics(ocp_data):
         else:
             sys.exit(f"Statistics {stat} has an invalid Data Area value of {stat_value['Data Area']}")
 
-        stat_data = generate_statistic(stat_value, stat, namespaces)
+        stat_data = generate_statistic(stat_value, stat, namespaces, log_page_c0, log_page_2h)
 
         # Validate the Identifier is not already used.
         for key in statistics[_area]:
@@ -935,6 +1879,188 @@ def static_snapshot_event(fifo_number, event_number, statistics, vu_strings):
     }
     return return_data
 
+# Generate a MCTP Debug Event
+#
+# Input:
+#         fifo_number  : FIFO that the event is to exist
+#         event_number : number of event in the FIFO
+#         statistics   : Dictionary of statistics
+#         vu_strings   : Information to generate vu strings in the string log
+#
+# Output: A dictionary entry for a Media Wear event
+#
+#                    {'name'        : string to identify the event,
+#                     'class'       : debug class,
+#                     'descriptor'  : event descriptor,
+#      <optional>     'vu_event'    : Unique Vendor ID,
+#      <optional>     'vu_string'   : String for vendor id}
+#
+def mctp_debug_event(fifo_number, event_number, statistics, vu_strings):
+    global debug_class_size
+    global event_id_size
+    debug_class = 0xD
+    non_vu_size = 2
+    event = bytearray()
+    event += debug_class.to_bytes(debug_class_size, "little")        #     00  Debug Event Class
+    if random.randint(0, 1) == 0:
+        event_id = random.randint(0x0, 0x3)
+    else:
+        event_id = random.randint(0x8000, 0xFFFF)
+    event += event_id.to_bytes(event_id_size, "little")              #  02:01 Event Id
+
+    vu_dwordsize = (random.randint(0, 1) * random.randint(1, 4)) + non_vu_size
+    event += vu_dwordsize.to_bytes(1, "little")                      #     03 Event Id
+
+    if event_id == 0:
+        debug_event = random.randint(0x0, 0x7)
+    elif event_id == 1:
+        debug_event = random.randint(0x0, 0x5)
+    elif event_id == 2:
+        debug_event = random.randint(0x0, 0x1)
+    elif event_id == 3:
+        debug_event = random.randint(0x1, 0x6)
+    else:
+        debug_event = 0x0
+    event += debug_event.to_bytes(0x2, "little")              #  05:04 MCTP Debug Event Data
+
+    mctp_tpi = random.randint(0x1, 0x5)
+    event += mctp_tpi.to_bytes(0x1, "little")              #  06 MCTP Transport Protocol Information
+
+    mctp_ef = 0x0 and (random.randint(0x0, 0x1))
+    event += mctp_ef.to_bytes(0x1, "little")              #  07 MCTP Event Flags
+
+    mctp_th = random.randint(0x0, 0x1)
+    event += mctp_th.to_bytes(0x4, "little")              #  11:08 MCTP Transport Header
+
+
+    if vu_dwordsize > non_vu_size:
+        (vu_name, vu_event_id) = get_vu_id_event_info(fifo_number, event_number, vu_strings)
+        event += vu_event_id.to_bytes(2, "little")
+        vu_data_size_bytes = ((vu_dwordsize - non_vu_size) * 4) - 2
+        event += random.randint(0, 2 ** (vu_data_size_bytes * 8) - 1).to_bytes(vu_data_size_bytes, "little")
+
+    # Build the return data
+    return_data = {
+        "name": f"MCTP Debug Event {fifo_number} {event_number}",
+        "class": debug_class,
+        "event id": event_id,
+        "descriptor": event,
+    }
+
+    if vu_dwordsize > non_vu_size:
+        return_data["vu_event"] = vu_event_id
+        return_data["vu_string"] = vu_name
+
+    return return_data
+
+# Generate a SMBUS/I2C/I3C Debug Event
+#
+# Input:
+#         fifo_number  : FIFO that the event is to exist
+#         event_number : number of event in the FIFO
+#         statistics   : Dictionary of statistics
+#         vu_strings   : Information to generate vu strings in the string log
+#
+# Output: A dictionary entry for a Media Wear event
+#
+#                    {'name'        : string to identify the event,
+#                     'class'       : debug class,
+#                     'descriptor'  : event descriptor,
+#      <optional>     'vu_event'    : Unique Vendor ID,
+#      <optional>     'vu_string'   : String for vendor id}
+#
+def smbus_i2c_i3c_event(fifo_number, event_number, statistics, vu_strings):
+
+    global debug_class_size
+    global event_id_size
+    debug_class = 0xC
+    non_vu_size = 1
+    event = bytearray()
+    event += debug_class.to_bytes(debug_class_size, "little")        #     00  Debug Event Class
+    if random.randint(0, 1) == 0:
+        event_id = random.randint(0x0, 0x3)
+    else:
+        event_id = random.randint(0x8000, 0xFFFF)
+    event += event_id.to_bytes(event_id_size, "little")              #  02:01 Event Id
+
+    vu_dwordsize = (random.randint(0, 1) * random.randint(1, 8)) + non_vu_size
+    event += vu_dwordsize.to_bytes(1, "little")                      #     03 Event Id
+
+    if event_id == 3:
+        debug_event = random.randint(0x0, 0x2)
+    else:
+        debug_event = random.randint(0x3, 0xFFFF)
+    event += debug_event.to_bytes(0x2, "little")              #  05:04 SMBUS Debug Event Data
+
+    reserved = 0x0
+    event += reserved.to_bytes(0x2, "little")              #  07:06 Reserved
+
+
+    if vu_dwordsize > non_vu_size:
+        (vu_name, vu_event_id) = get_vu_id_event_info(fifo_number, event_number, vu_strings)
+        event += vu_event_id.to_bytes(2, "little")
+        vu_data_size_bytes = ((vu_dwordsize - non_vu_size) * 4) - 2
+        event += random.randint(0, 2 ** (vu_data_size_bytes * 8) - 1).to_bytes(vu_data_size_bytes, "little")
+
+    # Build the return data
+    return_data = {
+        "name": f"SMBUS/I2C/I3C Event {fifo_number} {event_number}",
+        "class": debug_class,
+        "event id": event_id,
+        "descriptor": event,
+    }
+
+    if vu_dwordsize > non_vu_size:
+        return_data["vu_event"] = vu_event_id
+        return_data["vu_string"] = vu_name
+
+    return return_data
+
+# Generate a Virtual FIFO Debug Event
+#
+# Input:
+#         fifo_number  : FIFO that the event is to exist
+#         event_number : number of event in the FIFO
+#         statistics   : Dictionary of statistics
+#         vu_strings   : Information to generate vu strings in the string log
+#
+# Output: A dictionary entry for a Media Wear event
+#
+#                    {'name'        : string to identify the event,
+#                     'class'       : debug class,
+#                     'descriptor'  : event descriptor,
+#      <optional>     'vu_event'    : Unique Vendor ID,
+#      <optional>     'vu_string'   : String for vendor id}
+#
+def virtual_fifo_event(fifo_number, event_number, statistics, vu_strings):
+
+    global debug_class_size
+    global event_id_size
+    debug_class = 0xB
+    v_fifo_d_sz = 0x1
+    event = bytearray()
+    event += debug_class.to_bytes(debug_class_size, "little")        #     00  Debug Event Class
+    event_id = random.randint(0x0, 0x1)
+    event += event_id.to_bytes(event_id_size, "little")              #  02:01 Event Id
+
+    event += v_fifo_d_sz.to_bytes(1, "little")                 #     03 Virtual FIFO Data Size
+
+    vu_v_fifo_idfy = random.randint(0x0, 0xF)
+    event += vu_v_fifo_idfy.to_bytes(2, "little")              #  05:04 VU Virtual FIFO IDentifier
+    reserved = 0
+    event += reserved.to_bytes(2, "little")              #  07:06 Reserved
+
+
+
+    # Build the return data
+    return_data = {
+        "name": f"Virtual FIFO Event {fifo_number} {event_number}",
+        "class": debug_class,
+        "event id": event_id,
+        "descriptor": event,
+    }
+
+    return return_data
 
 # Generate a Media Wear Debug Event
 #
@@ -969,9 +2095,12 @@ def media_wear_event(fifo_number, event_number, statistics, vu_strings):
     vu_dwordsize = (random.randint(0, 1) * random.randint(1, 8)) + non_vu_size
     event += vu_dwordsize.to_bytes(1, "little")                      #     03 Event Id
 
-    event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  07:04 Host Terabytes Written
-    event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  11:08 Media Terabytes Written
-    event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  15:12 Host Terabytes Erased
+    if event_id == 0:
+        event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  07:04 Host Terabytes Written
+        event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  11:08 Media Terabytes Written
+        event += random.randint(0, 2 ** (32 - 1)).to_bytes(4, "little")  #  15:12 Host Terabytes Erased
+    else:
+        event += (0).to_bytes(12, "little")
 
     if vu_dwordsize > non_vu_size:
         (vu_name, vu_event_id) = get_vu_id_event_info(fifo_number, event_number, vu_strings)
@@ -1010,7 +2139,7 @@ def media_wear_event(fifo_number, event_number, statistics, vu_strings):
 #      <optional>     'vu_event'    : Unique Vendor ID,
 #      <optional>     'vu_string'   : String for vendor id}
 #
-def media_event(fifo_number, event_number, statistics, vu_strings):
+def media_debug_event(fifo_number, event_number, statistics, vu_strings):
 
     global debug_class_size
     global event_id_size
@@ -1034,7 +2163,7 @@ def media_event(fifo_number, event_number, statistics, vu_strings):
         event += random.randint(0, (2 ** (vu_data_size_bytes * 8)) - 1).to_bytes(vu_data_size_bytes, "little")
 
     return_data = {
-        "name": f"Media Event {fifo_number} {event_number}",
+        "name": f"Media Debug Event {fifo_number} {event_number}",
         "class": debug_class,
         "event id": event_id,
         "descriptor": event,
@@ -1489,7 +2618,12 @@ event_functions = [
     boot_event,
     fw_assert_event,
     temperature_event,
+    media_debug_event,
+    media_wear_event,
     static_snapshot_event,
+    virtual_fifo_event,
+    smbus_i2c_i3c_event,
+    mctp_debug_event,
     vendor_unique_event,
 ]
 
@@ -1611,7 +2745,6 @@ def hex_str_2_bytes(string, bytes, order):
 #        'log'  : string_log}
 #
 def generate_string_log(statistics, fifo):
-
     strings = bytearray()
     static_identifier_string_table = bytearray()
     event_string_table = bytearray()
@@ -1725,7 +2858,7 @@ def generate_string_log(statistics, fifo):
     for _area in ["Data Area 1", "Data Area 2"]:
         for _, stat_value in fifo[_area].items():
             for _, event_value in stat_value["Events"].items():
-                if event_value["class"] < 9:
+                if event_value["class"] < 9 or event_value["class"] in [0xB,0xC,0xD, 0x9]:
                     if "vu_string" in event_value:
                         class_type = event_value["class"]
                         vu_identifier = event_value["vu_event"]
@@ -1791,7 +2924,6 @@ def generate_string_log(statistics, fifo):
     string_log_size += len(event_string_table)
     string_log_size += len(vu_event_header_string_table)
     string_log_size += len(strings)
-
     string_log += (string_log_size // 4).to_bytes(8, "little")                                  #  39:32    String Log Size
     string_log += bytearray(24)                                                                 #  63:40    Reserevd
 
@@ -1942,7 +3074,10 @@ def get_log_02():
     data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(4, "little")    # 223:220  Thermal Management Temperature 2 Transition Count
     data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(4, "little")    # 227:224  Total Time For Thermal Management Temperature 1
     data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(4, "little")    # 231:228  Total Time For Thermal Management Temperature 2
-    data += bytearray(280)                                               # 511:232  Reserved
+    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")    # 239:232  Operational Lifetime Energy Consumed
+    data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(4, "little")    # 243:240  Interval Power Measurement
+
+    data += bytearray(268)                                               # 511:244  Reserved
 
     if len(data) != 512:
         sys.exit(f"SMART / Health Information log page 02h wrong size: {len(data)}")
@@ -1983,18 +3118,66 @@ def get_log_c0():
     data += random.randint(0, 100).to_bytes(1, "little")                    #     120 % Free Blocks
     data += bytearray(7)                                                    # 127:121 Reserved
     data += random.randint(0, 2 ** (2 * 8) - 1).to_bytes(2, "little")       # 129:128 Capacitor Health
-    data += (99).to_bytes(1, "little")                                      #     130 NVMe Errata Version 'c'
-    data += bytearray(5)                                                    # 135:131 Reserved
-    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")       # 143:136 Unaligned I/O
-    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")       # 151:144 Security Version Number
-    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")       # 159:152 Total NUSE
-    data += random.randint(0, 2 ** (16 * 8) - 1).to_bytes(16, "little")     # 175:160 PLP Start Count
-    data += random.randint(0, 2 ** (16 * 8) - 1).to_bytes(16, "little")     # 191:176 Endurance Estimate
-    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")       # 199:192 PCIe Link Retraining Count
-    data += random.randint(0, 2 ** (8 * 8) - 1).to_bytes(8, "little")       # 207:200 Power State Change Count
-    data += random.randint(0, 2 ** (16 * 8) - 1).to_bytes(16, "little")     # 223:208 Hardware Version
-    data += bytearray(493 - 224 + 1)                                        # 493:224 Reserved
-    data += (3).to_bytes(2, "little")                                       # 495:494 Log Page Version
+    data += (99).to_bytes(1, "little")                                      #     130 NVM Express Base Errata Version 'c'
+    data += (101).to_bytes(1, "little")                                      #     131 NVM Command Set Errata Version 'e'
+    data += (99).to_bytes(1, "little")                                      # 132 NVMe over PCIe Transport Errata Version 'c'
+    data += (99).to_bytes(1, "little")                                     # 133 NVM Express Management Interface Errata Version 'c'
+
+    data += random.randint(1,100).to_bytes(2,"little")  # 135:134 Proactive Bad Die Retirement
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 143:136 Unaligned I/O
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 151:144 Security Version Number
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 159:152 Total NUSE
+
+    data += random.randint(0,2 ** (16 * 8) - 1).to_bytes(16,"little")  # 175:160 PLP Start Count
+
+    data += random.randint(0,2 ** (16 * 8) - 1).to_bytes(16,"little")  # 191:176 Endurance Estimate
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 199:192 PCIe Link Retraining Count
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 207:200 Power State Change Count
+
+    data += (0).to_bytes(8, "little")                                     # 215:208 Lowest Permitted Firmware Revision
+
+    data += random.randint(0, 200).to_bytes(2, "little")  # 217:216 Total Media Dies
+
+    data += random.randint(0, 100).to_bytes(2, "little")  # 219:218 Media Die Failure Tolerance
+
+    data += random.randint(0, 50).to_bytes(2, "little")  # 221:220 Media Dies Offline
+
+    data += random.randint(1, 150).to_bytes(1, "little")  # 222 Max Temperature Recorded
+
+    data += random.randint(1, 8).to_bytes(1, "little")  # 223 Form Factor
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 231:224 NAND Avg. Erase Count
+
+    data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(4, "little")   # 235:232 Command Timeouts
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 243:236 System Area Program Fail Count
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 251:244 System Area Uncorrectable Read Count
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 259:252 System Area Erase Fail Count
+
+    data += random.randint(0, 100).to_bytes(2, "little")  # 261:260 Max Peak Power Capability
+
+    data += random.randint(0, 100).to_bytes(2, "little")  # 263:262 Current  Average Power
+
+    data += random.randint(0, 2 ** (4 * 8) - 1).to_bytes(6, "little")    # 269:264 Lifetime Power Consumed
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 277:270 DSSD Firmware Revision
+
+    data += random.randint(0,2 ** (16 * 8) - 1).to_bytes(16,"little")  # 293:278 DSSD Firmware Build UUID
+
+    data += random.randint(0, 2 ** (64 * 8) - 1).to_bytes(64,"little")  # 357:294 DSSD Firmware Build Label
+
+    data += random.randint(0,2 ** (8 * 8) - 1).to_bytes(8,"little")  # 365:358 Dies In Use Bad NAND Blocks
+
+    data += bytearray(128)                                                    # 493:366 Reserved
+
+    data += (6).to_bytes(2, "little")                                       # 495:494 Log Page Version
     data += int(0xAFD514C97C6F4F9CA4F2BFEA2810AFC5).to_bytes(16, "little")  # 511:496 Log PAge GUID
     if len(data) != 512:
         sys.exit("SMART / Health Information Extension log page C0h wrong size")
@@ -2008,12 +3191,13 @@ def get_log_c0():
 #         statistics      : Dictionary of statistics
 #         fifo            : FIFO information
 #         string_log_size : string log size in bytes
+#         log_page_c0     : Extended the Samrt Log Page
+#         log_page_2h     : Samrt Log Page
 #
 # Output: bytearray containing Data Area 1
 #
-def generate_data_area_1(ocp_data, statistics, fifo, string_log_size):
+def generate_data_area_1(ocp_data, statistics, fifo, string_log_size, log_page_c0, log_page_2h):
     print("Generating Data Area 1:")
-
     if ocp_data["size"] <= 1028:
         sys.exit("Data Area 1 Size too small as it must be larger than 2048 bytes")
 
@@ -2050,15 +3234,15 @@ def generate_data_area_1(ocp_data, statistics, fifo, string_log_size):
 
     data_area_1 += bytearray(80)                                                      #  511:432  FIFO 15 dw end
 
-    log_page = get_log_02()
-    print(f"\t\tSmart / Health Information log page Offset : 0x{len(data_area_1):x} (Length : 0x{len(log_page):x})")
-    data_area_1 += log_page                                                           # 1023:512  SMART / Health log page (02h)
+    #log_page_2h = get_log_02()
+    print(f"\t\tSmart / Health Information log page Offset : 0x{len(data_area_1):x} (Length : 0x{len(log_page_2h):x})")
+    data_area_1 += log_page_2h                                                           # 1023:512  SMART / Health log page (02h)
 
-    log_page = get_log_c0()
-    print(f"\t\tSmart / Health Information Extended log page Offset : 0x{len(data_area_1):x} (Length : 0x{len(log_page):x})")
-    data_area_1 += log_page                                                           # 1535:1024 SMART / Health Extended log page (C0h)
+    #log_page_c0 = get_log_c0()
+    print(f"\t\tSmart / Health Information Extended log page Offset : 0x{len(data_area_1):x} (Length : 0x{len(log_page_c0):x})")
+    data_area_1 += log_page_c0                                                           # 1535:1024 SMART / Health Extended log page (C0h)
 
-    print(f"\t\tData Area 1 Header Size : {len(data_area_1)} (0x{len(log_page):x})")
+    print(f"\t\tData Area 1 Header Size : {len(data_area_1)} (0x{len(log_page_2h):x}) (0x{len(log_page_c0):x})")
 
     if ocp_data["size"] < len(data_area_1) + len(statistics["Data Area 1 Table"]):
         sys.exit("Data Area 1 Size too small to include statistics area")
@@ -2288,7 +3472,7 @@ else:
         if (gc_value < ocp_debug_data["Statistics"]["OCP Defined"]["GC Write Bandwidth"]["Value Min"]) or (
             gc_value > ocp_debug_data["Statistics"]["OCP Defined"]["GC Write Bandwidth"]["Value Max"]
         ):
-            sys.exit("Statistics 'Host Write Bandwidth' and 'GC Write Bandwidth' min\/max value range error")
+            sys.exit("Statistics 'Host Write Bandwidth' and 'GC Write Bandwidth' min//max value range error")
 
         # Save the selected values
         ocp_debug_data["Statistics"]["OCP Defined"]["Host Write Bandwidth"]["Value Min"] = host_value
@@ -2296,8 +3480,14 @@ else:
         ocp_debug_data["Statistics"]["OCP Defined"]["GC Write Bandwidth"]["Value Min"] = gc_value
         ocp_debug_data["Statistics"]["OCP Defined"]["GC Write Bandwidth"]["Value Max"] = gc_value
 
+    # Generate the Extended Samrt log page C0h
+    log_page_c0 = get_log_c0()
+
+    # Generate the Smart Log Page 2h
+    log_page_2h = get_log_02()
+
     # Generate the statistics information
-    statistics = get_statistics(ocp_debug_data)
+    statistics = get_statistics(ocp_debug_data, log_page_c0, log_page_2h)
 
     # Generate the Fifo Information
     fifo = get_fifo(ocp_debug_data, statistics)
@@ -2317,7 +3507,7 @@ else:
 
     # Need to generate Data Area 2 before Data Area 1 as data from Data Area 2 exists in data area 1
     data_area_2 = generate_data_area_2(ocp_debug_data["Data Area 2"], statistics, fifo)
-    data_area_1 = generate_data_area_1(ocp_debug_data["Data Area 1"], statistics, fifo, string_log["size"])
+    data_area_1 = generate_data_area_1(ocp_debug_data["Data Area 1"], statistics, fifo, string_log["size"], log_page_c0, log_page_2h)
     data_area_3 = generate_data_area(3, ocp_debug_data["Data Area 3"]["size"])
     data_area_4 = generate_data_area(4, ocp_debug_data["Data Area 4"]["size"])
 
